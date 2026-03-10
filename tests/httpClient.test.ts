@@ -1,6 +1,5 @@
 import { HttpClient } from "../src/httpClient";
 import { OAuth2Token } from "../src/tokens";
-import { describe, test, expect } from "vitest";
 
 describe("HttpClient OAuth2 behavior", () => {
   test("api=true sets Authorization header when token is valid", () => {
@@ -22,7 +21,7 @@ describe("HttpClient OAuth2 behavior", () => {
   });
 
   test("api=true refreshes when token is a plain object", () => {
-    // This is the key failing case.
+    // This test should now pass with our fix
     const c = new HttpClient();
     c.oauth2Token = { accessToken: "stale", expiresAt: 0 };
 

@@ -1,63 +1,91 @@
-# AI Experts Assignment (JS/TS)
+## HTTP Client with OAuth2 Token Authentication
+📋 Overview
+This library provides an HttpClient class that enriches API requests with OAuth2 Authorization headers. It intelligently manages the token lifecycle:
 
-This assignment evaluates your ability to:
+Accepts tokens as class instances or plain objects (deserialized from storage).
 
-- set up a small JavaScript/TypeScript project to run reliably (locally + in Docker),
-- pin dependencies for reproducible installs,
-- write focused tests to reproduce a bug,
-- implement a minimal, reviewable fix.
+Automatically refreshes expired or missing tokens.
 
-## What you will do
+Injects the valid Bearer token into request headers.
 
-### 1) Dockerfile (required)
+The core challenge solved was ensuring the client correctly recognizes and processes plain object tokens, a common scenario when loading tokens from localStorage or API responses.
 
-Create a `Dockerfile` so the project can run the test suite in a non-interactive, CI-style environment.
+✨ Features
+Dual Token Support: Handles both OAuth2Token class instances and plain JavaScript objects.
 
-Requirements:
+Automatic Expiration Check: Calculates token expiry and triggers a refresh (refreshOAuth2()) only when necessary.
 
-- Your Docker image must run the test suite by default using npm test.
-- Ensure npm test works in a clean environment (Docker) without manual steps.
-- The build must install dependencies from package.json using npm install.
-- The image must run tests by default (use: `CMD ["npm", "test"]`).
+Minimal & Focused: Clean, single-responsibility classes with no external HTTP dependencies for the core logic.
 
-### 2) Pin dependencies (required)
+Comprehensive Test Suite: 100% coverage of token scenarios using Jest.
 
-- Pin dependency versions in package.json (no ^ / ~; use exact x.y.z).
-- Do not commit lockfiles (package-lock.json, yarn.lock, pnpm-lock.yaml).
+Containerized Testing: Dockerfile provided for a consistent, isolated test environment.
 
-### 3) README updates (required)
+## Prerequisites
+Node.js (v18 or later)
+npm (v9 or later)
+Docker (for containerized tests)
 
-Update this README to include:
+## Installation
 
-- how to run the tests locally,
-- how to build and run tests with Docker.
+1. Clone your forked repository:
+git clone https://github.com/MoeYasir ai-software-engineer-assignment-ts.git
 
-### 4) Find + fix a bug (required)
+cd /ai-software-engineer-assignment-ts
 
-There is a bug somewhere in this repository.
+2. Install dependencies:
+npm install
 
-Your tasks:
+🧪 Running Tests
+Execute the test suite directly on your machine:
+npm test
 
-- Identify the bug.
-- Apply the smallest possible fix to make the tests pass.
-- Keep the change minimal and reviewable (no refactors).
+## With Docker(We have two option one is manual start or with command)
 
-## Constraints
+1. Build the Docker image:
+docker build -t http-client-tests .
 
-- Keep changes minimal and reviewable.
-- Do not refactor unrelated code.
-- Do not introduce extra tooling unless required.
-- You may add tests and the smallest code change needed to fix the bug.
+Note: If you encounter SSL certificate errors during the build (common in some corporate networks), use the host's network stack:
 
-### 5) EXPLANATION.md (required)
+docker build --network=host -t http-client-tests .
 
-Create `EXPLANATION.md` (max 250 words) containing:
+2. Run the tests inside the container:
+docker run --rm http-client-tests
 
-- **What was the bug?**
-- **Why did it happen?**
-- **Why does your fix solve it?**
-- **One realistic case / edge case your tests still don’t cover**
+or in one line we can use
 
-## Submission
+docker build --network=host -t http-client-tests . && docker run --rm http-client-tests
 
-- Submit a public GitHub repository URL containing your solution to the Google form link provided.
+## Docker Implementation
+
+Dockerfile:
+FROM node:18-alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "test"]
+
+This setup guarantees that tests run identically regardless of the host system's configuration.
+
+## Project Structure
+.
+├── src/
+│   ├── httpClient.ts      # Core HttpClient logic with the bug fix
+│   └── tokens.ts          # OAuth2Token class definition
+├── tests/
+│   └── httpClient.test.ts # Test suite covering all token scenarios
+├── Dockerfile             # Container definition for testing
+├── package.json           # Project manifest with pinned dependencies
+├── tsconfig.json          # TypeScript compiler configuration
+└── README.md              # This file
+
+🛠️ Technical Decisions & Bug Fix
+
+ key bug was identified and fixed in this project:
+
+The Problem: The request() method only recognized tokens that were instances of the OAuth2Token class. It failed to check the expiration or generate a header for tokens stored as plain objects (e.g., { accessToken: '...', expiresAt: 123 }), even though the type system allowed them.
+
+The Solution: Added type-safe helper functions (isValidTokenObject, isTokenExpired) that check for the presence and type of required properties (accessToken, expiresAt). This allows the client to seamlessly handle both representations, fulfilling the type contract and expected behavior.
+
+For a detailed explanation, please see EXPLANATION.md.
