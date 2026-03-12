@@ -1,6 +1,6 @@
 ## HTTP Client with OAuth2 Token Authentication
 
-📋 Overview
+📋 Overview:
 This library provides an HttpClient class that enriches API requests with OAuth2 Authorization headers. It intelligently manages the token lifecycle:
 
 Accepts tokens as class instances or plain objects (deserialized from storage).
@@ -11,7 +11,7 @@ Injects the valid Bearer token into request headers.
 
 The core challenge solved was ensuring the client correctly recognizes and processes plain object tokens, a common scenario when loading tokens from localStorage or API responses.
 
-✨ Features
+✨ Features: 
 Dual Token Support: Handles both OAuth2Token class instances and plain JavaScript objects.
 
 Automatic Expiration Check: Calculates token expiry and triggers a refresh (refreshOAuth2()) only when necessary.
@@ -82,7 +82,7 @@ This setup guarantees that tests run identically regardless of the host system's
 ├── tsconfig.json          # TypeScript compiler configuration
 └── README.md              # This file
 
-🛠️ Technical Decisions & Bug Fix
+🛠️ Technical Decisions & Bug Fix:
 
  key bug was identified and fixed in this project:
 
