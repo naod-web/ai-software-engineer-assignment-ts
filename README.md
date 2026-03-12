@@ -1,4 +1,5 @@
 ## HTTP Client with OAuth2 Token Authentication
+
 📋 Overview
 This library provides an HttpClient class that enriches API requests with OAuth2 Authorization headers. It intelligently manages the token lifecycle:
 
@@ -22,13 +23,14 @@ Comprehensive Test Suite: 100% coverage of token scenarios using Jest.
 Containerized Testing: Dockerfile provided for a consistent, isolated test environment.
 
 ## Prerequisites
+
 Node.js (v18 or later)
 npm (v9 or later)
 Docker (for containerized tests)
 
 ## Installation
 
-1. Clone your forked repository:
+1. Clone repository:
 git clone https://github.com/MoeYasir ai-software-engineer-assignment-ts.git
 
 cd /ai-software-engineer-assignment-ts
